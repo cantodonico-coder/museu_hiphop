@@ -14,8 +14,9 @@
   --y:#ffd400; --r:#ff3b2f; --g:#1fd17a; --p:#ff2e93; --line:rgba(244,241,234,.14);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;overflow-x:clip}
+html,body{max-width:100%}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.55;overflow-x:clip;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 img,svg{display:block}
 .wrap{max-width:1320px;margin:0 auto;padding:0 16px}
@@ -85,7 +86,8 @@ header.solid{background:rgba(11,11,11,.82);backdrop-filter:blur(14px);border-bot
 @keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 
 /* marquee */
-.marquee{background:var(--y);color:#000;overflow:hidden;transform:rotate(-2deg);margin:40px -20px;border-block:3px solid #000}
+.mq-wrap{overflow:hidden;padding:20px 0}
+.marquee{background:var(--y);color:#000;overflow:hidden;transform:rotate(-2deg);margin:20px -20px;border-block:3px solid #000}
 .marquee.alt{background:var(--p);transform:rotate(1.5deg);margin-top:-30px}
 .track{display:flex;width:max-content;animation:mq 28s linear infinite}
 .marquee.alt .track{animation-direction:reverse}
@@ -116,7 +118,7 @@ section{padding:90px 0;position:relative}
 .hscroll::-webkit-scrollbar{display:none}
 @media(min-width:768px){.hscroll{padding:8px 40px 24px;margin:0 -40px}}
 .el{flex:0 0 82%;scroll-snap-align:start;min-height:460px;border-radius:24px;padding:28px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;color:#000;transition:transform .4s}
-.el:hover{transform:translateY(-6px) rotate(-.5deg)}
+@media(hover:hover){.el:hover{transform:translateY(-6px) rotate(-.5deg)}}
 @media(min-width:768px){.el{flex-basis:44%}}
 @media(min-width:1200px){.el{flex-basis:30%}}
 .el .n{font-family:Anton;font-size:20px}
@@ -130,10 +132,10 @@ section{padding:90px 0;position:relative}
 .grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden}
 @media(min-width:700px){.grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:1050px){.grid{grid-template-columns:repeat(3,1fr)}}
-.cell{background:var(--bg);padding:32px 24px;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;transition:background .35s}
+.cell{background:var(--bg);padding:20px 20px 32px;min-height:220px;display:flex;flex-direction:column;justify-content:flex-start;transition:background .35s}
 .cell:hover{background:var(--bg2)}
 .cell .ic{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:rgba(255,212,0,.1);color:var(--y);font-size:24px}
-.cell h4{font-family:Anton;font-size:30px;text-transform:uppercase;margin-top:28px}
+.cell h4{font-family:Anton;font-size:30px;text-transform:uppercase;margin-top:20px}
 .cell p{color:var(--muted);font-size:15px}
 
 /* timeline */
@@ -149,7 +151,7 @@ section{padding:90px 0;position:relative}
 .prog{display:grid;gap:16px}
 @media(min-width:900px){.prog{grid-template-columns:1.3fr 1fr 1fr}}
 .card{border:1px solid var(--line);border-radius:24px;padding:28px;display:flex;flex-direction:column;gap:14px;background:var(--bg2);position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
-.card:hover{border-color:var(--y);transform:translateY(-4px)}
+@media(hover:hover){.card:hover{border-color:var(--y);transform:translateY(-4px)}}
 .card.big{background:linear-gradient(140deg,#2a0d1c,#151515 60%)}
 .pill{align-self:flex-start;font-size:11px;font-weight:900;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;border-radius:999px;background:var(--y);color:#000}
 .pill.p{background:var(--p)}.pill.g{background:var(--g)}
@@ -171,6 +173,7 @@ section{padding:90px 0;position:relative}
 .row:last-child{border-bottom:0}
 .row span{color:var(--muted);font-size:14px}
 .row b{text-align:right;font-weight:700}
+@media(max-width:520px){.row{flex-direction:column;gap:4px}.row b{text-align:left}}
 .map{border-radius:24px;overflow:hidden;min-height:340px;border:1px solid var(--line);background:var(--bg2)}
 .map iframe{width:100%;height:100%;min-height:340px;border:0;filter:grayscale(1) invert(.92) contrast(.9)}
 .note{font-size:13px;color:var(--muted);margin-top:14px}
@@ -178,7 +181,7 @@ section{padding:90px 0;position:relative}
 /* form */
 form{display:grid;gap:12px;margin-top:24px}
 @media(min-width:600px){form{grid-template-columns:1fr 1fr}.full{grid-column:1/-1}}
-input,select,textarea{width:100%;background:transparent;border:0;border-bottom:1.5px solid var(--line);color:var(--ink);font:inherit;font-size:17px;padding:14px 2px;outline:none;transition:border-color .3s}
+input,select,textarea{width:100%;border-radius:0;-webkit-appearance:none;appearance:none;background:transparent;border:0;border-bottom:1.5px solid var(--line);color:var(--ink);font:inherit;font-size:17px;padding:14px 2px;outline:none;transition:border-color .3s}
 input:focus,select:focus,textarea:focus{border-color:var(--y)}
 select option{background:var(--bg)}
 .ok{display:none;color:var(--g);font-weight:700}
@@ -200,10 +203,44 @@ footer{padding:80px 0 40px;border-top:1px solid var(--line);margin-top:90px}
 .fcols a:hover{color:var(--y)}
 .legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;margin-top:56px;font-size:12px;color:var(--muted)}
 
+
+/* photo slots */
+.ph{position:relative;overflow:hidden;border-radius:18px;aspect-ratio:4/3;background:
+ repeating-linear-gradient(135deg,rgba(255,212,0,.06) 0 12px,transparent 12px 24px),var(--bg2);
+ border:1px dashed rgba(255,212,0,.35);display:grid;place-items:center;margin:0}
+.ph[data-label]::before{content:"📷 " attr(data-label);font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,212,0,.7);text-align:center;padding:16px}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(.15) contrast(1.05);transition:transform 1.2s cubic-bezier(.2,.8,.2,1),filter .6s}
+.ph:has(img){border:0}
+@media(hover:hover){.ph:hover img{transform:scale(1.05);filter:none}}
+.ph figcaption{position:absolute;left:0;right:0;bottom:0;padding:24px 14px 10px;font-size:12px;color:#ddd;background:linear-gradient(transparent,rgba(0,0,0,.75));z-index:2}
+.ph:not(:has(img)) figcaption{display:none}
+.ti .ph{margin:16px 0 4px;max-width:620px}
+.cell .ph{aspect-ratio:16/10;margin-bottom:20px;border-radius:12px}
+.about-ph{margin-top:48px;aspect-ratio:16/9;border-radius:24px}
+@media(min-width:900px){.about-ph{aspect-ratio:21/9}}
+
+
+/* galleries */
+.slot:empty{display:none}
+.gal{position:relative;margin:16px 0 4px;max-width:620px}
+.cell-slot .gal{margin:0 0 20px}
+.about-slot .gal{max-width:none;margin-top:48px}
+.gtrack{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;scrollbar-width:none;border-radius:18px}
+.gtrack::-webkit-scrollbar{display:none}
+.gtrack .ph{flex:0 0 100%;scroll-snap-align:start;border:0}
+.about-slot .ph{aspect-ratio:16/9}
+@media(min-width:900px){.about-slot .ph{aspect-ratio:21/9}}
+.cell-slot .ph{aspect-ratio:16/10}
+.gcount{position:absolute;top:10px;right:10px;z-index:3;background:rgba(0,0,0,.7);color:var(--y);font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}
+.gnav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:38px;height:38px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:18px;cursor:pointer;display:none}
+@media(hover:hover){.gal.multi .gnav{display:grid;place-items:center}}
+.gnav.prev{left:10px}.gnav.next{right:10px}
+
 /* cursor */
 .cur{position:fixed;top:0;left:0;width:14px;height:14px;border-radius:50%;background:var(--y);pointer-events:none;z-index:1000;mix-blend-mode:difference;transform:translate(-50%,-50%);transition:width .25s,height .25s;display:none}
 @media(hover:hover) and (pointer:fine){.cur{display:block}}
 .cur.big{width:64px;height:64px}
+.cur:not(.on){opacity:0}
 
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}.h-title .ln span{transform:none}}
 </style>
@@ -257,14 +294,14 @@ footer{padding:80px 0 40px;border-top:1px solid var(--line);margin-top:90px}
   </div>
 </section>
 
-<div class="marquee"><div class="track">
+<div class="mq-wrap"><div class="marquee"><div class="track">
   <span>MC</span><span>DJ</span><span>Breaking</span><span>Graffiti</span><span>Conhecimento</span><span>Periferia viva</span>
   <span>MC</span><span>DJ</span><span>Breaking</span><span>Graffiti</span><span>Conhecimento</span><span>Periferia viva</span>
 </div></div>
 <div class="marquee alt"><div class="track">
   <span>Primeiro da América Latina</span><span>6 mil itens</span><span>4 mil m²</span><span>Zona Norte de POA</span>
   <span>Primeiro da América Latina</span><span>6 mil itens</span><span>4 mil m²</span><span>Zona Norte de POA</span>
-</div></div>
+</div></div></div>
 
 <!-- SOBRE -->
 <section id="sobre">
@@ -272,6 +309,7 @@ footer{padding:80px 0 40px;border-top:1px solid var(--line);margin-top:90px}
     <span class="tag reveal">O Museu</span>
     <h2 class="sh reveal">Feito pela<br>comunidade.</h2>
     <p class="lead reveal">Inaugurado em <em>dezembro de 2023</em>, quando o Hip Hop completou 50 anos, o museu ocupa a antiga Escola Osvaldo Aranha, na Vila Ipiranga. É uma iniciativa coletiva da <em>Associação da Cultura Hip Hop de Esteio</em> — um espaço para preservar a história do movimento gaúcho e transformar vidas pela cultura.</p>
+    <div class="slot about-slot reveal" data-slot="fachada"></div>
     <div class="stats">
       <div class="stat reveal"><b data-count="6000" data-suffix="+">0</b><small>itens de acervo físico e digital</small></div>
       <div class="stat reveal"><b data-count="4000" data-suffix=" m²">0</b><small>de área cultural</small></div>
@@ -323,12 +361,12 @@ footer{padding:80px 0 40px;border-top:1px solid var(--line);margin-top:90px}
     <span class="tag reveal">Dentro do museu</span>
     <h2 class="sh reveal">Espaços</h2>
     <div class="grid reveal">
-      <div class="cell"><div class="ic">◼</div><div><h4>Salas expositivas</h4><p>Exposições permanentes e temporárias sobre a história do Hip Hop gaúcho.</p></div></div>
-      <div class="cell"><div class="ic">✂</div><div><h4>Ateliê de oficinas</h4><p>Formação gratuita em rima, dança, DJ, grafite, moda e audiovisual.</p></div></div>
-      <div class="cell"><div class="ic">♫</div><div><h4>Estúdio musical</h4><p>Gravação e produção para artistas da cena.</p></div></div>
-      <div class="cell"><div class="ic">❒</div><div><h4>Biblioteca</h4><p>Livros, discos, zines e pesquisa sobre a cultura.</p></div></div>
-      <div class="cell"><div class="ic">☕</div><div><h4>Café</h4><p>Ponto de encontro para trocar ideia entre uma sala e outra.</p></div></div>
-      <div class="cell"><div class="ic">◎</div><div><h4>Obras gigantes</h4><p>Instalações interativas na área externa, como a vitrola gigante.</p></div></div>
+      <div class="cell"><div class="slot cell-slot" data-slot="espacos.salas"></div><div><h4>Salas expositivas</h4><p>Exposições permanentes e temporárias sobre a história do Hip Hop gaúcho.</p></div></div>
+      <div class="cell"><div class="slot cell-slot" data-slot="espacos.oficinas"></div><div><h4>Ateliê de oficinas</h4><p>Formação gratuita em rima, dança, DJ, grafite, moda e audiovisual.</p></div></div>
+      <div class="cell"><div class="slot cell-slot" data-slot="espacos.estudio"></div><div><h4>Estúdio musical</h4><p>Gravação e produção para artistas da cena.</p></div></div>
+      <div class="cell"><div class="slot cell-slot" data-slot="espacos.biblioteca"></div><div><h4>Biblioteca</h4><p>Livros, discos, zines e pesquisa sobre a cultura.</p></div></div>
+      <div class="cell"><div class="slot cell-slot" data-slot="espacos.cafe"></div><div><h4>Café</h4><p>Ponto de encontro para trocar ideia entre uma sala e outra.</p></div></div>
+      <div class="cell"><div class="slot cell-slot" data-slot="espacos.vitrola"></div><div><h4>Obras gigantes</h4><p>Instalações interativas na área externa, como a vitrola gigante.</p></div></div>
     </div>
   </div>
 </section>
@@ -340,14 +378,7 @@ footer{padding:80px 0 40px;border-top:1px solid var(--line);margin-top:90px}
       <span class="tag reveal">Linha do tempo</span>
       <h2 class="sh reveal">Do Bronx<br>à Zona<br>Norte</h2>
     </div>
-    <div class="tl">
-      <div class="ti reveal"><div class="y">1973</div><h4>Nasce o Hip Hop</h4><p>Em 11 de agosto, uma festa organizada por Cindy Campbell no Bronx, em Nova York, marca o nascimento do movimento.</p></div>
-      <div class="ti reveal"><div class="y">Esteio</div><h4>Casa da Cultura Hip Hop</h4><p>A Associação da Cultura Hip Hop de Esteio cria a Casa de Cultura, abrindo portas para as juventudes da Região Metropolitana.</p></div>
-      <div class="ti reveal"><div class="y">2021</div><h4>O espaço é cedido</h4><p>A Prefeitura de Porto Alegre cede a antiga Escola Osvaldo Aranha para a associação construir o museu.</p></div>
-      <div class="ti reveal"><div class="y">2023</div><h4>Portas abertas</h4><p>Em 10 de dezembro, no ano dos 50 anos do Hip Hop, o museu é inaugurado com grafitagem e shows.</p></div>
-      <div class="ti reveal"><div class="y">2024</div><h4>Resistência</h4><p>Durante a enchente no RS, o museu vira ponto de coleta e distribuição de doações.</p></div>
-      <div class="ti reveal" style="padding-bottom:0"><div class="y">Hoje</div><h4>Cultura em movimento</h4><p>Exposições, editais, formação gratuita e eventos que fortalecem a cena de todo o Brasil.</p></div>
-    </div>
+    <div class="tl" id="tl"></div>
   </div>
 </section>
 
@@ -447,6 +478,39 @@ footer{padding:80px 0 40px;border-top:1px solid var(--line);margin-top:90px}
 </footer>
 
 <script>
+
+const DEFAULT_DATA={"fachada": [], "espacos": {"salas": [], "oficinas": [], "estudio": [], "biblioteca": [], "cafe": [], "vitrola": []}, "timeline": [{"ano": "1973", "titulo": "Nasce o Hip Hop", "texto": "Em 11 de agosto, uma festa organizada por Cindy Campbell no Bronx, em Nova York, marca o nascimento do movimento.", "fotos": [{"src": "https://commons.wikimedia.org/wiki/Special:FilePath/1520_Sedwick_Ave.,_Bronx,_New_York1.JPG?width=1600", "cap": "1520 Sedgwick Avenue, Bronx — berço do Hip Hop · Foto: Wikimedia Commons"}]}, {"ano": "Esteio", "titulo": "Casa da Cultura Hip Hop", "texto": "A Associação da Cultura Hip Hop de Esteio cria a Casa de Cultura, abrindo portas para as juventudes da Região Metropolitana.", "fotos": []}, {"ano": "2021", "titulo": "O espaço é cedido", "texto": "A Prefeitura de Porto Alegre cede a antiga Escola Osvaldo Aranha para a associação construir o museu.", "fotos": [{"src": "https://bancodeimagens.portoalegre.rs.gov.br/sites/default/files/2021/04/19/210419_Divulga%C3%A7%C3%A3o_PMPA_PHOTO-2021-04-19-16-22-37.jpg", "cap": "Visita ao prédio da antiga escola, 2021 · Foto: Divulgação/PMPA"}]}, {"ano": "2023", "titulo": "Portas abertas", "texto": "Em 10 de dezembro, no ano dos 50 anos do Hip Hop, o museu é inaugurado com grafitagem e shows.", "fotos": [{"src": "https://bancodeimagens.portoalegre.rs.gov.br/sites/default/files/2023/12/10/10DEZ2023_Alex%20Rocha_Museu%20Hip%20Hop%20RS_-9.jpg", "cap": "Inauguração, 10/12/2023 · Foto: Alex Rocha/PMPA"}]}, {"ano": "2024", "titulo": "Resistência", "texto": "Durante a enchente no RS, o museu vira ponto de coleta e distribuição de doações.", "fotos": [{"src": "https://images03.brasildefato.com.br/76c7fa28a90bce8a1fbc36939090c77a.webp", "cap": "Doações para atingidos pela enchente, 2024 · Foto: Carlos Messalla/Brasil de Fato"}]}, {"ano": "Hoje", "titulo": "Cultura em movimento", "texto": "Exposições, editais, formação gratuita e eventos que fortalecem a cena de todo o Brasil.", "fotos": [{"src": "https://images01.brasildefato.com.br/483a59093d32b5cb4b5fa133d516c8f9.webp", "cap": "Evento Vem Pro Museu · Foto: Carlos Messalla/Brasil de Fato"}]}]};
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function phErr(i){const g=i.closest('.gal');i.closest('figure').remove();if(g){const n=g.querySelectorAll('figure').length;if(!n)g.remove();else{const c=g.querySelector('.gcount');if(c)c.textContent='1/'+n;if(n<2)g.classList.remove('multi'),g.querySelectorAll('.gnav,.gcount').forEach(x=>x.remove())}}}
+function galHTML(fotos){
+  fotos=(fotos||[]).filter(f=>f&&f.src);
+  if(!fotos.length)return '';
+  const items=fotos.map(f=>`<figure class="ph"><img src="${esc(f.src)}" alt="${esc(f.cap)}" loading="lazy" referrerpolicy="no-referrer" onerror="phErr(this)">${f.cap?`<figcaption>${esc(f.cap)}</figcaption>`:''}</figure>`).join('');
+  const m=fotos.length>1;
+  return `<div class="gal${m?' multi':''}">${m?`<span class="gcount">1/${fotos.length}</span><button class="gnav prev" aria-label="Anterior">‹</button><button class="gnav next" aria-label="Próxima">›</button>`:''}<div class="gtrack">${items}</div></div>`;
+}
+function wireGals(root){
+  root.querySelectorAll('.gal.multi').forEach(g=>{
+    const t=g.querySelector('.gtrack'),c=g.querySelector('.gcount');
+    const upd=()=>{const n=t.children.length;const i=Math.round(t.scrollLeft/t.clientWidth)+1;c.textContent=Math.min(i,n)+'/'+n};
+    t.addEventListener('scroll',upd,{passive:true});
+    g.querySelector('.prev').onclick=()=>t.scrollBy({left:-t.clientWidth,behavior:'smooth'});
+    g.querySelector('.next').onclick=()=>t.scrollBy({left:t.clientWidth,behavior:'smooth'});
+  });
+}
+function renderData(d){
+  document.querySelectorAll('[data-slot]').forEach(el=>{
+    const path=el.dataset.slot.split('.');let v=d;path.forEach(k=>v=v&&v[k]);
+    el.innerHTML=galHTML(v);
+  });
+  const tl=document.getElementById('tl');
+  tl.innerHTML=(d.timeline||[]).map((t,i,a)=>`<div class="ti reveal"${i==a.length-1?' style="padding-bottom:0"':''}><div class="y">${esc(t.ano)}</div><h4>${esc(t.titulo)}</h4><p>${esc(t.texto)}</p>${galHTML(t.fotos)}</div>`).join('');
+  wireGals(document);
+  if(window.__io)document.querySelectorAll('.reveal:not(.in)').forEach(e=>window.__io.observe(e));
+}
+renderData(DEFAULT_DATA);
+fetch('dados.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{if(d)renderData(d)}).catch(()=>{});
+
 (function(){
   const hdr=document.getElementById('hdr'),prog=document.getElementById('prog');
   addEventListener('scroll',()=>{
@@ -459,7 +523,7 @@ footer{padding:80px 0 40px;border-top:1px solid var(--line);margin-top:90px}
   b.onclick=()=>document.body.classList.toggle('menu-open');
   document.querySelectorAll('#mmenu a').forEach(a=>a.onclick=()=>document.body.classList.remove('menu-open'));
 
-  const io=new IntersectionObserver(es=>es.forEach(e=>{
+  const io=window.__io=new IntersectionObserver(es=>es.forEach(e=>{
     if(!e.isIntersecting)return;
     e.target.classList.add('in');
     const c=e.target.querySelector('[data-count]');
@@ -477,7 +541,7 @@ footer{padding:80px 0 40px;border-top:1px solid var(--line);margin-top:90px}
 
   // cursor
   const cur=document.getElementById('cur');
-  addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
+  addEventListener('mousemove',e=>{cur.classList.add('on');cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px'});
   document.querySelectorAll('a,button,.el,.card').forEach(el=>{
     el.addEventListener('mouseenter',()=>cur.classList.add('big'));
     el.addEventListener('mouseleave',()=>cur.classList.remove('big'));

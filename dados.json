@@ -1,0 +1,59 @@
+{
+  "fachada": [],
+  "espacos": {
+    "salas": [],
+    "oficinas": [],
+    "estudio": [],
+    "biblioteca": [],
+    "cafe": [],
+    "vitrola": []
+  },
+  "timeline": [
+    {
+      "ano": "1973",
+      "titulo": "Nasce o Hip Hop",
+      "texto": "Em 11 de agosto, uma festa organizada por Cindy Campbell no Bronx, em Nova York, marca o nascimento do movimento.",
+      "fotos": [
+        {"src": "https://commons.wikimedia.org/wiki/Special:FilePath/1520_Sedwick_Ave.,_Bronx,_New_York1.JPG?width=1600", "cap": "1520 Sedgwick Avenue, Bronx — berço do Hip Hop · Foto: Wikimedia Commons"}
+      ]
+    },
+    {
+      "ano": "Esteio",
+      "titulo": "Casa da Cultura Hip Hop",
+      "texto": "A Associação da Cultura Hip Hop de Esteio cria a Casa de Cultura, abrindo portas para as juventudes da Região Metropolitana.",
+      "fotos": []
+    },
+    {
+      "ano": "2021",
+      "titulo": "O espaço é cedido",
+      "texto": "A Prefeitura de Porto Alegre cede a antiga Escola Osvaldo Aranha para a associação construir o museu.",
+      "fotos": [
+        {"src": "https://bancodeimagens.portoalegre.rs.gov.br/sites/default/files/2021/04/19/210419_Divulga%C3%A7%C3%A3o_PMPA_PHOTO-2021-04-19-16-22-37.jpg", "cap": "Visita ao prédio da antiga escola, 2021 · Foto: Divulgação/PMPA"}
+      ]
+    },
+    {
+      "ano": "2023",
+      "titulo": "Portas abertas",
+      "texto": "Em 10 de dezembro, no ano dos 50 anos do Hip Hop, o museu é inaugurado com grafitagem e shows.",
+      "fotos": [
+        {"src": "https://bancodeimagens.portoalegre.rs.gov.br/sites/default/files/2023/12/10/10DEZ2023_Alex%20Rocha_Museu%20Hip%20Hop%20RS_-9.jpg", "cap": "Inauguração, 10/12/2023 · Foto: Alex Rocha/PMPA"}
+      ]
+    },
+    {
+      "ano": "2024",
+      "titulo": "Resistência",
+      "texto": "Durante a enchente no RS, o museu vira ponto de coleta e distribuição de doações.",
+      "fotos": [
+        {"src": "https://images03.brasildefato.com.br/76c7fa28a90bce8a1fbc36939090c77a.webp", "cap": "Doações para atingidos pela enchente, 2024 · Foto: Carlos Messalla/Brasil de Fato"}
+      ]
+    },
+    {
+      "ano": "Hoje",
+      "titulo": "Cultura em movimento",
+      "texto": "Exposições, editais, formação gratuita e eventos que fortalecem a cena de todo o Brasil.",
+      "fotos": [
+        {"src": "https://images01.brasildefato.com.br/483a59093d32b5cb4b5fa133d516c8f9.webp", "cap": "Evento Vem Pro Museu · Foto: Carlos Messalla/Brasil de Fato"}
+      ]
+    }
+  ]
+}

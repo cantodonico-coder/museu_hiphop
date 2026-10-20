@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Painel de Fotos</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0b0b;--bg2:#151515;--bg3:#1e1e1e;--ink:#f4f1ea;--muted:#9a968d;--y:#ffd400;--r:#ff3b2f;--g:#1fd17a;--p:#ff2e93;--line:rgba(244,241,234,.14)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.5;padding-bottom:110px}
+.wrap{max-width:920px;margin:0 auto;padding:0 16px}
+header{padding:28px 0 8px}
+h1{font-family:Anton;text-transform:uppercase;font-size:clamp(36px,8vw,60px);line-height:.95}
+h1 b{background:var(--y);color:#000;padding:0 8px;display:inline-block;transform:rotate(-2deg)}
+.sub{color:var(--muted);margin-top:8px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:18px;padding:18px;margin-top:18px}
+.card>h2{font-family:Anton;text-transform:uppercase;font-size:26px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+h3{font-size:15px;text-transform:uppercase;letter-spacing:1px;color:var(--y);margin:16px 0 8px}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:1px}
+input,textarea{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit;font-size:16px;padding:10px 12px;outline:none}
+input:focus,textarea:focus{border-color:var(--y)}
+textarea{min-height:70px;resize:vertical}
+.grid2{display:grid;gap:0 12px}
+@media(min-width:640px){.grid2{grid-template-columns:1fr 1fr}}
+button,.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:999px;font:inherit;font-weight:700;font-size:14px;padding:10px 16px;cursor:pointer;background:var(--bg3);color:var(--ink);text-decoration:none}
+button:disabled{opacity:.5;cursor:default}
+.pri{background:var(--y);color:#000}
+.dan{background:transparent;color:var(--r);border:1px solid rgba(255,59,47,.4)}
+.sm{padding:6px 10px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.status{font-size:14px;margin-top:10px;color:var(--muted)}
+.status.ok{color:var(--g)}.status.err{color:var(--r)}
+.photos{display:grid;gap:10px}
+.ph{display:grid;grid-template-columns:96px 1fr;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px}
+.ph img{width:96px;height:72px;object-fit:cover;border-radius:8px;background:var(--bg3)}
+.ph .f{display:grid;gap:6px;min-width:0}
+.ph .f input{font-size:14px;padding:7px 10px}
+.ph .acts{display:flex;gap:6px;flex-wrap:wrap}
+.empty{color:var(--muted);font-size:14px;padding:10px;border:1px dashed var(--line);border-radius:12px;text-align:center}
+.item{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:14px;background:var(--bg3)}
+.item .top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.item .yr{font-family:Anton;font-size:28px;color:var(--y)}
+details summary{cursor:pointer;color:var(--muted);font-size:14px;margin-top:6px}
+details ol{margin:10px 0 0 18px;font-size:14px;color:#cfcbc2}
+details li{margin-bottom:6px}
+code{background:var(--bg3);padding:1px 6px;border-radius:6px;font-size:13px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:rgba(11,11,11,.92);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:12px 16px;z-index:10}
+.bar .wrap{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:0}
+.dirty{font-size:13px;color:var(--muted)}
+.dirty.on{color:var(--y)}
+.prog{font-size:13px;color:var(--y);order:3;width:100%}
+.prog:empty{display:none}
+.bar .wrap{flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Painel de <b>Fotos</b></h1>
+    <p class="sub">Atualize as imagens do site sem mexer no código.</p>
+  </header>
+
+  <section class="card" id="cfg">
+    <h2>Conexão GitHub</h2>
+    <div class="grid2">
+      <div><label>Usuário</label><input id="owner" value="cantodonico-coder"></div>
+      <div><label>Repositório</label><input id="repo" value="museu_hiphop"></div>
+      <div><label>Branch</label><input id="branch" value="main"></div>
+      <div><label>Token</label><input id="token" type="password" placeholder="github_pat_..." autocomplete="off"></div>
+    </div>
+    <div class="row">
+      <button class="pri" id="load">Conectar e carregar</button>
+      <button id="forget" class="dan sm">Esquecer token</button>
+    </div>
+    <div class="status" id="st">O token fica salvo só neste navegador.</div>
+    <details>
+      <summary>Como criar o token (uma vez só)</summary>
+      <ol>
+        <li>No GitHub: <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</b>.</li>
+        <li>Em <b>Repository access</b>, escolha <b>Only select repositories</b> → <code>museu_hiphop</code>.</li>
+        <li>Em <b>Permissions → Repository permissions → Contents</b>, marque <b>Read and write</b>.</li>
+        <li>Gere, copie e cole aqui. Não compartilhe com ninguém.</li>
+      </ol>
+    </details>
+  </section>
+
+  <div id="editor" hidden>
+    <section class="card"><h2>Fachada</h2><div data-path="fachada"></div></section>
+
+    <section class="card"><h2>Espaços</h2><div id="espacos"></div></section>
+
+    <section class="card">
+      <h2>Linha do tempo <button class="pri sm" id="addYear">+ Ano</button></h2>
+      <div id="tl"></div>
+    </section>
+
+    <div class="row" style="margin-top:18px">
+      <button class="sm" id="dl">Baixar backup (dados.json)</button>
+    </div>
+  </div>
+</div>
+
+<div class="bar">
+  <div class="wrap">
+    <span class="dirty" id="dirty">Nada para publicar</span>
+    <span class="prog" id="prog"></span>
+    <div style="display:flex;gap:8px">
+      <a class="btn sm" href="./" target="_blank">Ver site</a>
+      <button class="pri" id="pub" disabled>Publicar</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="file" accept="image/*" multiple hidden>
+
+<script>
+const ESP=[["salas","Salas expositivas"],["oficinas","Ateliê de oficinas"],["estudio","Estúdio musical"],["biblioteca","Biblioteca"],["cafe","Café"],["vitrola","Obras gigantes"]];
+const $=id=>document.getElementById(id);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let D=null,SHA=null,PREVIEW={},uploadTarget=null;
+const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+
+['owner','repo','branch','token'].forEach(k=>{const v=LS.get('mh_'+k);if(v)$(k).value=v});
+const cfg=()=>({o:$('owner').value.trim(),r:$('repo').value.trim(),b:$('branch').value.trim()||'main',t:$('token').value.trim()});
+function status(msg,cls=''){const s=$('st');s.textContent=msg;s.className='status '+cls}
+function dirty(on){$('dirty').textContent=on?'● Alterações não publicadas':'Tudo publicado';$('dirty').className='dirty'+(on?' on':'');$('pub').disabled=!on}
+
+const b64e=s=>btoa(unescape(encodeURIComponent(s)));
+const b64d=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,''))));
+async function api(path,opt={}){
+  const c=cfg();
+  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}`+(opt.method?'':`?ref=${encodeURIComponent(c.b)}`),{
+    ...opt,headers:{'Authorization':'Bearer '+c.t,'Accept':'application/vnd.github+json',...(opt.headers||{})}});
+  return r;
+}
+function normalize(d){
+  d=d||{};d.fachada=d.fachada||[];d.espacos=d.espacos||{};ESP.forEach(([k])=>d.espacos[k]=d.espacos[k]||[]);d.timeline=d.timeline||[];
+  d.timeline.forEach(t=>t.fotos=t.fotos||[]);return d;
+}
+
+$('load').onclick=async()=>{
+  const c=cfg();if(!c.t){status('Cole o token primeiro.','err');return}
+  ['owner','repo','branch','token'].forEach(k=>LS.set('mh_'+k,$(k).value.trim()));
+  status('Carregando…');
+  try{
+    const r=await api('dados.json');
+    if(r.status===404){
+      const local=await fetch('dados.json?v='+Date.now()).then(x=>x.ok?x.json():null).catch(()=>null);
+      D=normalize(local);SHA=null;status('dados.json ainda não existe no repositório. Ele será criado ao publicar.','ok');dirty(true);
+    }else if(r.status===401||r.status===403){status('Token sem permissão. Confira o passo a passo abaixo.','err');return}
+    else if(!r.ok){status('Erro '+r.status+' ao carregar. Confira usuário, repositório e branch.','err');return}
+    else{const j=await r.json();SHA=j.sha;D=normalize(JSON.parse(b64d(j.content)));status('Conectado ✓','ok');dirty(false)}
+    $('editor').hidden=false;render();
+  }catch(e){status('Falha de conexão: '+e.message,'err')}
+};
+$('forget').onclick=()=>{LS.del('mh_token');$('token').value='';status('Token apagado deste navegador.','ok')};
+
+function getArr(path){return path.split('.').reduce((o,k)=>o[k],D)}
+function photosHTML(path){
+  const arr=getArr(path);
+  const list=arr.length?arr.map((f,i)=>`
+    <div class="ph">
+      <img src="${esc(PREVIEW[f.src]||f.src)}" alt="" referrerpolicy="no-referrer" onerror="this.style.opacity=.2">
+      <div class="f">
+        <input placeholder="Legenda e crédito (ex.: Foto: Fulano/PMPA)" value="${esc(f.cap)}" data-p="${path}" data-i="${i}" data-k="cap">
+        <input placeholder="Link da imagem" value="${esc(f.src)}" data-p="${path}" data-i="${i}" data-k="src">
+        <div class="acts">
+          <button class="sm" data-act="up" data-p="${path}" data-i="${i}" ${i==0?'disabled':''}>↑</button>
+          <button class="sm" data-act="down" data-p="${path}" data-i="${i}" ${i==arr.length-1?'disabled':''}>↓</button>
+          <button class="sm dan" data-act="del" data-p="${path}" data-i="${i}">Remover</button>
+        </div>
+      </div>
+    </div>`).join(''):'<div class="empty">Sem fotos aqui ainda</div>';
+  return `<div class="photos">${list}</div>
+    <div class="row">
+      <button class="sm pri" data-act="upload" data-p="${path}">📷 Enviar foto</button>
+      <button class="sm" data-act="link" data-p="${path}">🔗 Colar link</button>
+    </div>`;
+}
+function render(){
+  document.querySelector('[data-path="fachada"]').innerHTML=photosHTML('fachada');
+  $('espacos').innerHTML=ESP.map(([k,n])=>`<h3>${n}</h3>${photosHTML('espacos.'+k)}`).join('');
+  $('tl').innerHTML=D.timeline.map((t,i)=>`
+    <div class="item">
+      <div class="top"><span class="yr">${esc(t.ano)||'Novo'}</span>
+        <div class="acts" style="display:flex;gap:6px">
+          <button class="sm" data-act="yup" data-i="${i}" ${i==0?'disabled':''}>↑</button>
+          <button class="sm" data-act="ydown" data-i="${i}" ${i==D.timeline.length-1?'disabled':''}>↓</button>
+          <button class="sm dan" data-act="ydel" data-i="${i}">Excluir ano</button>
+        </div>
+      </div>
+      <div class="grid2">
+        <div><label>Ano / marco</label><input value="${esc(t.ano)}" data-y="${i}" data-k="ano"></div>
+        <div><label>Título</label><input value="${esc(t.titulo)}" data-y="${i}" data-k="titulo"></div>
+      </div>
+      <label>Texto</label><textarea data-y="${i}" data-k="texto">${esc(t.texto)}</textarea>
+      <label>Fotos (${t.fotos.length})</label>
+      ${photosHTML('timeline.'+i+'.fotos')}
+    </div>`).join('')||'<div class="empty">Nenhum ano. Clique em + Ano.</div>';
+}
+
+document.addEventListener('input',e=>{
+  const el=e.target;if(!D)return;
+  if(el.dataset.p){getArr(el.dataset.p)[+el.dataset.i][el.dataset.k]=el.value;dirty(true)}
+  else if(el.dataset.y!==undefined){D.timeline[+el.dataset.y][el.dataset.k]=el.value;dirty(true);
+    if(el.dataset.k==='ano')el.closest('.item').querySelector('.yr').textContent=el.value||'Novo'}
+});
+document.addEventListener('change',e=>{if(e.target.dataset.k==='src')render()});
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b||!D)return;
+  const a=b.dataset.act,i=+b.dataset.i;
+  if(b.dataset.p){
+    const arr=getArr(b.dataset.p);
+    if(a==='up'){[arr[i-1],arr[i]]=[arr[i],arr[i-1]]}
+    else if(a==='down'){[arr[i+1],arr[i]]=[arr[i],arr[i+1]]}
+    else if(a==='del'){if(!confirm('Remover esta foto do site?'))return;arr.splice(i,1)}
+    else if(a==='link'){const u=prompt('Cole o link da imagem (termina em .jpg, .png, .webp…):');if(!u)return;const c=prompt('Legenda e crédito da foto:')||'';arr.push({src:u.trim(),cap:c.trim()})}
+    else if(a==='upload'){uploadTarget=b.dataset.p;$('file').value='';$('file').click();return}
+    dirty(true);render();return;
+  }
+  if(a==='yup'){[D.timeline[i-1],D.timeline[i]]=[D.timeline[i],D.timeline[i-1]]}
+  else if(a==='ydown'){[D.timeline[i+1],D.timeline[i]]=[D.timeline[i],D.timeline[i+1]]}
+  else if(a==='ydel'){if(!confirm('Excluir este ano e as fotos dele da linha do tempo?'))return;D.timeline.splice(i,1)}
+  dirty(true);render();
+});
+$('addYear').onclick=()=>{D.timeline.push({ano:'',titulo:'',texto:'',fotos:[]});dirty(true);render();
+  const items=document.querySelectorAll('#tl .item');items[items.length-1].scrollIntoView({behavior:'smooth',block:'center'});items[items.length-1].querySelector('input').focus()};
+
+function resize(file,max=1600,q=.82){
+  return new Promise((res,rej)=>{
+    const img=new Image(),u=URL.createObjectURL(file);
+    img.onload=()=>{let{width:w,height:h}=img;const s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);
+      const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+      c.toBlob(b=>{URL.revokeObjectURL(u);b?res(b):rej(new Error('conversão falhou'))},'image/jpeg',q)};
+    img.onerror=()=>rej(new Error('formato não suportado (use JPG ou PNG)'));img.src=u;
+  });
+}
+const blob64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result.split(',')[1]);f.readAsDataURL(b)});
+$('file').onchange=async()=>{
+  const files=[...$('file').files];if(!files.length||!uploadTarget)return;
+  const arr=getArr(uploadTarget);let n=0;
+  for(const f of files){
+    n++;$('prog').textContent=`Enviando foto ${n}/${files.length}…`;
+    try{
+      const blob=await resize(f);
+      const name=`fotos/${new Date().toISOString().replace(/\D/g,'').slice(0,14)}-${Math.random().toString(36).slice(2,6)}.jpg`;
+      const r=await api(name,{method:'PUT',body:JSON.stringify({message:'Nova foto pelo painel',content:await blob64(blob),branch:cfg().b})});
+      if(!r.ok)throw new Error('GitHub respondeu '+r.status);
+      PREVIEW[name]=URL.createObjectURL(blob);
+      arr.push({src:name,cap:''});dirty(true);render();
+    }catch(e){alert('Não deu para enviar '+f.name+': '+e.message)}
+  }
+  $('prog').textContent=n?'Foto(s) enviada(s). Escreva a legenda e clique em Publicar.':'';
+};
+
+$('pub').onclick=async()=>{
+  $('pub').disabled=true;$('prog').textContent='Publicando…';
+  try{
+    const clean=JSON.parse(JSON.stringify(D));
+    const all=[clean.fachada,...Object.values(clean.espacos),...clean.timeline.map(t=>t.fotos)];
+    all.forEach(a=>{for(let i=a.length-1;i>=0;i--)if(!a[i].src||!a[i].src.trim())a.splice(i,1)});
+    const body={message:'Atualizar fotos pelo painel',content:b64e(JSON.stringify(clean,null,2)),branch:cfg().b};if(SHA)body.sha=SHA;
+    let r=await api('dados.json',{method:'PUT',body:JSON.stringify(body)});
+    if(r.status===409||r.status===422){const g=await api('dados.json');if(g.ok){body.sha=(await g.json()).sha;r=await api('dados.json',{method:'PUT',body:JSON.stringify(body)})}}
+    if(!r.ok)throw new Error('GitHub respondeu '+r.status);
+    SHA=(await r.json()).content.sha;dirty(false);
+    $('prog').textContent='Publicado ✓ O site atualiza em 1–2 minutos.';
+  }catch(e){$('prog').textContent='';alert('Erro ao publicar: '+e.message);$('pub').disabled=false}
+};
+$('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,2)],{type:'application/json'}));a.download='dados.json';a.click()};
+addEventListener('beforeunload',e=>{if(!$('pub').disabled){e.preventDefault();e.returnValue=''}});
+</script>
+</body>
+</html>
