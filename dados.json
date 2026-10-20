@@ -1,4 +1,93 @@
 {
+  "site": {
+    "hero": {
+      "tag": "Porto Alegre · RS · Desde 2023",
+      "texto": "O primeiro museu da América Latina dedicado ao Hip Hop. Memória viva das periferias gaúchas — do toca-discos ao spray, da rima ao conhecimento."
+    },
+    "sobre": {
+      "texto": "Inaugurado em *dezembro de 2023*, quando o Hip Hop completou 50 anos, o museu ocupa a antiga Escola Osvaldo Aranha, na Vila Ipiranga. É uma iniciativa coletiva da *Associação da Cultura Hip Hop de Esteio* — um espaço para preservar a história do movimento gaúcho e transformar vidas pela cultura."
+    },
+    "numeros": {
+      "itens": "6000",
+      "area": "4000"
+    },
+    "elementos": {
+      "mc": "A palavra como arma e ferramenta. Rima, poesia e o rap como voz das quebradas.",
+      "dj": "Toca-discos, scratch e o break da batida. Onde tudo começou, no Bronx de 1973.",
+      "breaking": "O corpo em movimento. Battles, rodas e a dança que virou modalidade olímpica.",
+      "graffiti": "A cidade como tela. Cor, letra e identidade nos muros da periferia.",
+      "conhecimento": "O quinto elemento: consciência, educação e cidadania que unem todos os outros."
+    },
+    "espacos": {
+      "salas": {
+        "titulo": "Salas expositivas",
+        "texto": "Exposições permanentes e temporárias sobre a história do Hip Hop gaúcho."
+      },
+      "oficinas": {
+        "titulo": "Ateliê de oficinas",
+        "texto": "Formação gratuita em rima, dança, DJ, grafite, moda e audiovisual."
+      },
+      "estudio": {
+        "titulo": "Estúdio musical",
+        "texto": "Gravação e produção para artistas da cena."
+      },
+      "biblioteca": {
+        "titulo": "Biblioteca",
+        "texto": "Livros, discos, zines e pesquisa sobre a cultura."
+      },
+      "cafe": {
+        "titulo": "Café",
+        "texto": "Ponto de encontro para trocar ideia entre uma sala e outra."
+      },
+      "vitrola": {
+        "titulo": "Obras gigantes",
+        "texto": "Instalações interativas na área externa, como a vitrola gigante."
+      }
+    },
+    "programacao": [
+      {
+        "tipo": "Exposição",
+        "cor": "rosa",
+        "titulo": "Hip Hop\ndas Manas",
+        "texto": "Celebra o protagonismo das mulheres na história do movimento, inspirada na trajetória de Cindy Campbell.",
+        "botao": "Ver horários →",
+        "link": "#visite"
+      },
+      {
+        "tipo": "Evento",
+        "cor": "amarelo",
+        "titulo": "Vem Pro Museu",
+        "texto": "Shows, batalhas de breaking e editais para coletivos de Hip Hop de todo o país.",
+        "botao": "Saiba mais →",
+        "link": "#visite"
+      },
+      {
+        "tipo": "Formação",
+        "cor": "verde",
+        "titulo": "Oficinas gratuitas",
+        "texto": "Turmas sobre os cinco elementos, com prioridade para jovens em vulnerabilidade, pessoas negras e mulheres.",
+        "botao": "Quero participar →",
+        "link": "#visite"
+      }
+    ],
+    "visita": {
+      "endereco": "Rua Parque dos Nativos, 545\nVila Ipiranga · Porto Alegre/RS",
+      "funcionamento": "Quarta a domingo",
+      "visitas": "Livres ou agendadas",
+      "grupos": "Mediante agendamento",
+      "nota": "Confirme horários e valores nos canais oficiais antes da visita."
+    },
+    "apoio": {
+      "titulo": "Fortaleça\no museu",
+      "texto": "Seja apoiador, parceiro ou voluntário. A cultura Hip Hop se mantém viva com a força da comunidade."
+    },
+    "redes": {
+      "instagram": "",
+      "youtube": "",
+      "facebook": "",
+      "whatsapp": ""
+    }
+  },
   "fachada": [],
   "espacos": {
     "salas": [],
@@ -14,7 +103,10 @@
       "titulo": "Nasce o Hip Hop",
       "texto": "Em 11 de agosto, uma festa organizada por Cindy Campbell no Bronx, em Nova York, marca o nascimento do movimento.",
       "fotos": [
-        {"src": "https://commons.wikimedia.org/wiki/Special:FilePath/1520_Sedwick_Ave.,_Bronx,_New_York1.JPG?width=1600", "cap": "1520 Sedgwick Avenue, Bronx — berço do Hip Hop · Foto: Wikimedia Commons"}
+        {
+          "src": "https://commons.wikimedia.org/wiki/Special:FilePath/1520_Sedwick_Ave.,_Bronx,_New_York1.JPG?width=1600",
+          "cap": "1520 Sedgwick Avenue, Bronx — berço do Hip Hop · Foto: Wikimedia Commons"
+        }
       ]
     },
     {
@@ -28,7 +120,10 @@
       "titulo": "O espaço é cedido",
       "texto": "A Prefeitura de Porto Alegre cede a antiga Escola Osvaldo Aranha para a associação construir o museu.",
       "fotos": [
-        {"src": "https://bancodeimagens.portoalegre.rs.gov.br/sites/default/files/2021/04/19/210419_Divulga%C3%A7%C3%A3o_PMPA_PHOTO-2021-04-19-16-22-37.jpg", "cap": "Visita ao prédio da antiga escola, 2021 · Foto: Divulgação/PMPA"}
+        {
+          "src": "https://bancodeimagens.portoalegre.rs.gov.br/sites/default/files/2021/04/19/210419_Divulga%C3%A7%C3%A3o_PMPA_PHOTO-2021-04-19-16-22-37.jpg",
+          "cap": "Visita ao prédio da antiga escola, 2021 · Foto: Divulgação/PMPA"
+        }
       ]
     },
     {
@@ -36,7 +131,10 @@
       "titulo": "Portas abertas",
       "texto": "Em 10 de dezembro, no ano dos 50 anos do Hip Hop, o museu é inaugurado com grafitagem e shows.",
       "fotos": [
-        {"src": "https://bancodeimagens.portoalegre.rs.gov.br/sites/default/files/2023/12/10/10DEZ2023_Alex%20Rocha_Museu%20Hip%20Hop%20RS_-9.jpg", "cap": "Inauguração, 10/12/2023 · Foto: Alex Rocha/PMPA"}
+        {
+          "src": "https://bancodeimagens.portoalegre.rs.gov.br/sites/default/files/2023/12/10/10DEZ2023_Alex%20Rocha_Museu%20Hip%20Hop%20RS_-9.jpg",
+          "cap": "Inauguração, 10/12/2023 · Foto: Alex Rocha/PMPA"
+        }
       ]
     },
     {
@@ -44,7 +142,10 @@
       "titulo": "Resistência",
       "texto": "Durante a enchente no RS, o museu vira ponto de coleta e distribuição de doações.",
       "fotos": [
-        {"src": "https://images03.brasildefato.com.br/76c7fa28a90bce8a1fbc36939090c77a.webp", "cap": "Doações para atingidos pela enchente, 2024 · Foto: Carlos Messalla/Brasil de Fato"}
+        {
+          "src": "https://images03.brasildefato.com.br/76c7fa28a90bce8a1fbc36939090c77a.webp",
+          "cap": "Doações para atingidos pela enchente, 2024 · Foto: Carlos Messalla/Brasil de Fato"
+        }
       ]
     },
     {
@@ -52,7 +153,10 @@
       "titulo": "Cultura em movimento",
       "texto": "Exposições, editais, formação gratuita e eventos que fortalecem a cena de todo o Brasil.",
       "fotos": [
-        {"src": "https://images01.brasildefato.com.br/483a59093d32b5cb4b5fa133d516c8f9.webp", "cap": "Evento Vem Pro Museu · Foto: Carlos Messalla/Brasil de Fato"}
+        {
+          "src": "https://images01.brasildefato.com.br/483a59093d32b5cb4b5fa133d516c8f9.webp",
+          "cap": "Evento Vem Pro Museu · Foto: Carlos Messalla/Brasil de Fato"
+        }
       ]
     }
   ]

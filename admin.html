@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>Painel de Fotos</title>
+<title>Painel ADM</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0b0b0b;--bg2:#151515;--bg3:#1e1e1e;--ink:#f4f1ea;--muted:#9a968d;--y:#ffd400;--r:#ff3b2f;--g:#1fd17a;--p:#ff2e93;--line:rgba(244,241,234,.14)}
@@ -53,113 +53,165 @@ code{background:var(--bg3);padding:1px 6px;border-radius:6px;font-size:13px}
 .prog{font-size:13px;color:var(--y);order:3;width:100%}
 .prog:empty{display:none}
 .bar .wrap{flex-wrap:wrap}
+
+.login{min-height:100svh;display:grid;place-items:center;padding:16px}
+.login .card{width:100%;max-width:420px}
+.pin{font-size:28px;letter-spacing:10px;text-align:center}
+.tabs{position:sticky;top:0;z-index:5;background:rgba(11,11,11,.92);backdrop-filter:blur(10px);display:flex;gap:6px;overflow-x:auto;padding:10px 0;margin-top:10px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{flex:0 0 auto;font-size:13px;font-weight:700;padding:8px 14px;border-radius:999px;background:var(--bg3);color:var(--ink);text-decoration:none}
+.hint{font-size:12px;color:var(--muted);margin-top:4px}
+select{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--ink);font:inherit;font-size:16px;padding:10px 12px}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:10px}
+section{scroll-margin-top:64px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Painel de <b>Fotos</b></h1>
-    <p class="sub">Atualize as imagens do site sem mexer no código.</p>
-  </header>
 
-  <section class="card" id="cfg">
-    <h2>Conexão GitHub</h2>
-    <div class="grid2">
-      <div><label>Usuário</label><input id="owner" value="cantodonico-coder"></div>
-      <div><label>Repositório</label><input id="repo" value="museu_hiphop"></div>
-      <div><label>Branch</label><input id="branch" value="main"></div>
-      <div><label>Token</label><input id="token" type="password" placeholder="github_pat_..." autocomplete="off"></div>
-    </div>
-    <div class="row">
-      <button class="pri" id="load">Conectar e carregar</button>
-      <button id="forget" class="dan sm">Esquecer token</button>
-    </div>
-    <div class="status" id="st">O token fica salvo só neste navegador.</div>
-    <details>
-      <summary>Como criar o token (uma vez só)</summary>
-      <ol>
-        <li>No GitHub: <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</b>.</li>
-        <li>Em <b>Repository access</b>, escolha <b>Only select repositories</b> → <code>museu_hiphop</code>.</li>
-        <li>Em <b>Permissions → Repository permissions → Contents</b>, marque <b>Read and write</b>.</li>
-        <li>Gere, copie e cole aqui. Não compartilhe com ninguém.</li>
-      </ol>
-    </details>
-  </section>
-
-  <div id="editor" hidden>
-    <section class="card"><h2>Fachada</h2><div data-path="fachada"></div></section>
-
-    <section class="card"><h2>Espaços</h2><div id="espacos"></div></section>
-
-    <section class="card">
-      <h2>Linha do tempo <button class="pri sm" id="addYear">+ Ano</button></h2>
-      <div id="tl"></div>
-    </section>
-
-    <div class="row" style="margin-top:18px">
-      <button class="sm" id="dl">Baixar backup (dados.json)</button>
-    </div>
+<!-- LOGIN -->
+<div class="login" id="vLogin" hidden>
+  <div class="card">
+    <h1 style="font-size:40px">Acesso <b>ADM</b></h1>
+    <p class="sub">Museu da Cultura Hip Hop RS</p>
+    <label>PIN</label>
+    <input id="pinIn" class="pin" type="password" inputmode="numeric" maxlength="12" autocomplete="current-password">
+    <div class="row"><button class="pri" id="enter" style="flex:1">Entrar</button></div>
+    <div class="status" id="stLogin"></div>
+    <div class="row"><button class="sm dan" id="reset">Trocar conta / esqueci o PIN</button></div>
   </div>
 </div>
 
+<!-- SETUP -->
+<div class="login" id="vSetup" hidden>
+  <div class="card">
+    <h1 style="font-size:40px">Configurar <b>ADM</b></h1>
+    <p class="sub">Faça isso uma vez em cada aparelho.</p>
+    <div class="grid2">
+      <div><label>Usuário GitHub</label><input id="owner" value="cantodonico-coder"></div>
+      <div><label>Repositório</label><input id="repo" value="museu_hiphop"></div>
+    </div>
+    <label>Branch</label><input id="branch" value="main">
+    <label>Token do GitHub</label><input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
+    <details>
+      <summary>Como criar o token</summary>
+      <ol>
+        <li>GitHub → <b>Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token</b>.</li>
+        <li><b>Repository access</b> → <b>Only select repositories</b> → <code>museu_hiphop</code>.</li>
+        <li><b>Permissions → Contents</b> → <b>Read and write</b>.</li>
+        <li>Gere, copie e cole aqui.</li>
+      </ol>
+    </details>
+    <label>Crie um PIN (mín. 4 dígitos)</label>
+    <input id="pinNew" class="pin" type="password" inputmode="numeric" maxlength="12" autocomplete="new-password">
+    <div class="row"><button class="pri" id="save" style="flex:1">Salvar e entrar</button></div>
+    <div class="status" id="stSetup">O token fica guardado criptografado neste aparelho, protegido pelo PIN.</div>
+  </div>
+</div>
+
+<!-- EDITOR -->
+<div id="vEditor" hidden>
+<div class="wrap">
+  <header class="toprow">
+    <h1 style="font-size:36px">Painel <b>ADM</b></h1>
+    <button class="sm dan" id="logout">Sair</button>
+  </header>
+  <nav class="tabs">
+    <a href="#s-inicio">Início</a><a href="#s-elementos">Elementos</a><a href="#s-espacos">Espaços</a><a href="#s-tl">Linha do tempo</a><a href="#s-prog">Programação</a><a href="#s-visita">Visita</a><a href="#s-redes">Redes</a>
+  </nav>
+
+  <section class="card" id="s-inicio"><h2>Início e Sobre</h2><div id="f-inicio"></div></section>
+  <section class="card" id="s-elementos"><h2>5 Elementos</h2><div id="f-elementos"></div></section>
+  <section class="card" id="s-espacos"><h2>Espaços</h2><div id="f-espacos"></div></section>
+  <section class="card" id="s-tl"><h2>Linha do tempo <button class="pri sm" id="addYear">+ Ano</button></h2><div id="tl"></div></section>
+  <section class="card" id="s-prog"><h2>Programação <button class="pri sm" id="addProg">+ Card</button></h2><div id="prog"></div></section>
+  <section class="card" id="s-visita"><h2>Visita e Apoio</h2><div id="f-visita"></div></section>
+  <section class="card" id="s-redes"><h2>Redes sociais</h2><div id="f-redes"></div><p class="hint">Deixe vazio para esconder. Instagram aceita só o @.</p></section>
+
+  <div class="row" style="margin-top:18px"><button class="sm" id="dl">Baixar backup</button></div>
+</div>
 <div class="bar">
   <div class="wrap">
-    <span class="dirty" id="dirty">Nada para publicar</span>
-    <span class="prog" id="prog"></span>
+    <span class="dirty" id="dirty">Tudo publicado</span>
     <div style="display:flex;gap:8px">
       <a class="btn sm" href="./" target="_blank">Ver site</a>
       <button class="pri" id="pub" disabled>Publicar</button>
     </div>
+    <span class="prog" id="prog2"></span>
   </div>
+</div>
 </div>
 
 <input type="file" id="file" accept="image/*" multiple hidden>
 
 <script>
 const ESP=[["salas","Salas expositivas"],["oficinas","Ateliê de oficinas"],["estudio","Estúdio musical"],["biblioteca","Biblioteca"],["cafe","Café"],["vitrola","Obras gigantes"]];
+const ELS=[["mc","MC"],["dj","DJ"],["breaking","Breaking"],["graffiti","Graffiti"],["conhecimento","Conhecimento"]];
 const $=id=>document.getElementById(id);
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let D=null,SHA=null,PREVIEW={},uploadTarget=null;
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+let C=null,D=null,SHA=null,PREVIEW={},uploadTarget=null;
+const show=v=>['vLogin','vSetup','vEditor'].forEach(x=>$(x).hidden=x!==v);
 
-['owner','repo','branch','token'].forEach(k=>{const v=LS.get('mh_'+k);if(v)$(k).value=v});
-const cfg=()=>({o:$('owner').value.trim(),r:$('repo').value.trim(),b:$('branch').value.trim()||'main',t:$('token').value.trim()});
-function status(msg,cls=''){const s=$('st');s.textContent=msg;s.className='status '+cls}
-function dirty(on){$('dirty').textContent=on?'● Alterações não publicadas':'Tudo publicado';$('dirty').className='dirty'+(on?' on':'');$('pub').disabled=!on}
+/* ---------- crypto: token protegido por PIN ---------- */
+const te=new TextEncoder(),td=new TextDecoder();
+const b2s=b=>btoa(String.fromCharCode(...new Uint8Array(b)));const s2b=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function keyFrom(pin,salt){const k=await crypto.subtle.importKey('raw',te.encode(pin),'PBKDF2',false,['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:200000,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function seal(obj,pin){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},await keyFrom(pin,salt),te.encode(JSON.stringify(obj)));return JSON.stringify({s:b2s(salt),i:b2s(iv),c:b2s(ct)})}
+async function unseal(str,pin){const o=JSON.parse(str);const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:s2b(o.i)},await keyFrom(pin,s2b(o.s)),s2b(o.c));return JSON.parse(td.decode(pt))}
 
+/* ---------- login ---------- */
+function stt(id,msg,cls=''){const s=$(id);s.textContent=msg;s.className='status '+cls}
+$('save').onclick=async()=>{
+  const c={o:$('owner').value.trim(),r:$('repo').value.trim(),b:$('branch').value.trim()||'main',t:$('token').value.trim()},pin=$('pinNew').value.trim();
+  if(!c.t)return stt('stSetup','Cole o token.','err');if(pin.length<4)return stt('stSetup','O PIN precisa ter pelo menos 4 dígitos.','err');
+  stt('stSetup','Testando acesso…');C=c;
+  if(!(await connect('stSetup')))return;
+  LS.set('mh_vault',await seal(c,pin));LS.del('mh_token');
+};
+$('enter').onclick=async()=>{
+  const pin=$('pinIn').value.trim();if(!pin)return;
+  stt('stLogin','Entrando…');
+  try{C=await unseal(LS.get('mh_vault'),pin)}catch(e){$('pinIn').value='';return stt('stLogin','PIN incorreto.','err')}
+  await connect('stLogin');
+};
+$('pinIn').onkeydown=e=>{if(e.key==='Enter')$('enter').click()};
+$('reset').onclick=()=>{if(confirm('Apagar o acesso salvo neste aparelho? Você vai precisar do token de novo.')){LS.del('mh_vault');show('vSetup')}};
+$('logout').onclick=()=>{if(!$('pub').disabled&&!confirm('Há alterações não publicadas. Sair mesmo assim?'))return;C=null;D=null;$('pinIn').value='';show('vLogin')};
+
+/* ---------- GitHub ---------- */
 const b64e=s=>btoa(unescape(encodeURIComponent(s)));
 const b64d=s=>decodeURIComponent(escape(atob(s.replace(/\n/g,''))));
-async function api(path,opt={}){
-  const c=cfg();
-  const r=await fetch(`https://api.github.com/repos/${c.o}/${c.r}/contents/${path}`+(opt.method?'':`?ref=${encodeURIComponent(c.b)}`),{
-    ...opt,headers:{'Authorization':'Bearer '+c.t,'Accept':'application/vnd.github+json',...(opt.headers||{})}});
-  return r;
+function api(path,opt={}){
+  return fetch(`https://api.github.com/repos/${C.o}/${C.r}/contents/${path}`+(opt.method?'':`?ref=${encodeURIComponent(C.b)}`),
+    {...opt,headers:{'Authorization':'Bearer '+C.t,'Accept':'application/vnd.github+json'}});
 }
 function normalize(d){
-  d=d||{};d.fachada=d.fachada||[];d.espacos=d.espacos||{};ESP.forEach(([k])=>d.espacos[k]=d.espacos[k]||[]);d.timeline=d.timeline||[];
-  d.timeline.forEach(t=>t.fotos=t.fotos||[]);return d;
+  d=d||{};d.fachada=d.fachada||[];d.espacos=d.espacos||{};ESP.forEach(([k])=>d.espacos[k]=d.espacos[k]||[]);
+  d.timeline=d.timeline||[];d.timeline.forEach(t=>t.fotos=t.fotos||[]);
+  const S=d.site=d.site||{};['hero','sobre','numeros','elementos','visita','apoio','redes'].forEach(k=>S[k]=S[k]||{});
+  S.espacos=S.espacos||{};ESP.forEach(([k])=>S.espacos[k]=S.espacos[k]||{});S.programacao=S.programacao||[];return d;
 }
-
-$('load').onclick=async()=>{
-  const c=cfg();if(!c.t){status('Cole o token primeiro.','err');return}
-  ['owner','repo','branch','token'].forEach(k=>LS.set('mh_'+k,$(k).value.trim()));
-  status('Carregando…');
+async function connect(stId){
   try{
     const r=await api('dados.json');
-    if(r.status===404){
-      const local=await fetch('dados.json?v='+Date.now()).then(x=>x.ok?x.json():null).catch(()=>null);
-      D=normalize(local);SHA=null;status('dados.json ainda não existe no repositório. Ele será criado ao publicar.','ok');dirty(true);
-    }else if(r.status===401||r.status===403){status('Token sem permissão. Confira o passo a passo abaixo.','err');return}
-    else if(!r.ok){status('Erro '+r.status+' ao carregar. Confira usuário, repositório e branch.','err');return}
-    else{const j=await r.json();SHA=j.sha;D=normalize(JSON.parse(b64d(j.content)));status('Conectado ✓','ok');dirty(false)}
-    $('editor').hidden=false;render();
-  }catch(e){status('Falha de conexão: '+e.message,'err')}
-};
-$('forget').onclick=()=>{LS.del('mh_token');$('token').value='';status('Token apagado deste navegador.','ok')};
+    if(r.status===401||r.status===403){stt(stId,'Token sem permissão de escrita nesse repositório.','err');return false}
+    if(r.status===404){const local=await fetch('dados.json?v='+Date.now()).then(x=>x.ok?x.json():null).catch(()=>null);D=normalize(local);SHA=null;dirty(true)}
+    else if(!r.ok){stt(stId,'Erro '+r.status+'. Confira usuário, repositório e branch.','err');return false}
+    else{const j=await r.json();SHA=j.sha;D=normalize(JSON.parse(b64d(j.content)));dirty(false)}
+    render();show('vEditor');return true;
+  }catch(e){stt(stId,'Falha de conexão: '+e.message,'err');return false}
+}
+function dirty(on){$('dirty').textContent=on?'● Alterações não publicadas':'Tudo publicado';$('dirty').className='dirty'+(on?' on':'');$('pub').disabled=!on}
 
-function getArr(path){return path.split('.').reduce((o,k)=>o[k],D)}
+/* ---------- campos ---------- */
+const getP=(p)=>p.split('.').reduce((o,k)=>o==null?o:o[k],D);
+function setP(p,v){const ks=p.split('.');let o=D;ks.slice(0,-1).forEach(k=>o=o[k]=o[k]??{});o[ks[ks.length-1]]=v}
+const F=(p,label,type='input',hint='')=>`<label>${label}</label>`+(type==='area'?`<textarea data-f="${p}">${esc(getP(p))}</textarea>`:`<input data-f="${p}" value="${esc(getP(p))}">`)+(hint?`<div class="hint">${hint}</div>`:'');
+
 function photosHTML(path){
-  const arr=getArr(path);
+  const arr=getP(path)||[];
   const list=arr.length?arr.map((f,i)=>`
     <div class="ph">
       <img src="${esc(PREVIEW[f.src]||f.src)}" alt="" referrerpolicy="no-referrer" onerror="this.style.opacity=.2">
@@ -172,105 +224,108 @@ function photosHTML(path){
           <button class="sm dan" data-act="del" data-p="${path}" data-i="${i}">Remover</button>
         </div>
       </div>
-    </div>`).join(''):'<div class="empty">Sem fotos aqui ainda</div>';
-  return `<div class="photos">${list}</div>
-    <div class="row">
-      <button class="sm pri" data-act="upload" data-p="${path}">📷 Enviar foto</button>
-      <button class="sm" data-act="link" data-p="${path}">🔗 Colar link</button>
-    </div>`;
+    </div>`).join(''):'<div class="empty">Sem fotos</div>';
+  return `<label>Fotos (${arr.length})</label><div class="photos">${list}</div>
+    <div class="row"><button class="sm pri" data-act="upload" data-p="${path}">📷 Enviar foto</button><button class="sm" data-act="link" data-p="${path}">🔗 Colar link</button></div>`;
 }
 function render(){
-  document.querySelector('[data-path="fachada"]').innerHTML=photosHTML('fachada');
-  $('espacos').innerHTML=ESP.map(([k,n])=>`<h3>${n}</h3>${photosHTML('espacos.'+k)}`).join('');
+  $('f-inicio').innerHTML=F('site.hero.tag','Selo do topo')+F('site.hero.texto','Texto de abertura','area')+
+    F('site.sobre.texto','Texto "O Museu"','area','Coloque *entre asteriscos* para destacar em amarelo.')+
+    `<div class="grid2">${F('site.numeros.itens','Itens no acervo')}${F('site.numeros.area','Área (m²)')}</div>`+
+    `<h3>Foto da fachada</h3>`+photosHTML('fachada');
+  $('f-elementos').innerHTML=ELS.map(([k,n])=>F('site.elementos.'+k,n,'area')).join('');
+  $('f-espacos').innerHTML=ESP.map(([k,n])=>`<div class="item"><span class="yr" style="font-size:22px">${n}</span>${F('site.espacos.'+k+'.titulo','Título')}${F('site.espacos.'+k+'.texto','Texto','area')}${photosHTML('espacos.'+k)}</div>`).join('');
   $('tl').innerHTML=D.timeline.map((t,i)=>`
     <div class="item">
-      <div class="top"><span class="yr">${esc(t.ano)||'Novo'}</span>
-        <div class="acts" style="display:flex;gap:6px">
-          <button class="sm" data-act="yup" data-i="${i}" ${i==0?'disabled':''}>↑</button>
-          <button class="sm" data-act="ydown" data-i="${i}" ${i==D.timeline.length-1?'disabled':''}>↓</button>
-          <button class="sm dan" data-act="ydel" data-i="${i}">Excluir ano</button>
-        </div>
+      <div class="toprow"><span class="yr">${esc(t.ano)||'Novo'}</span>
+        <div style="display:flex;gap:6px"><button class="sm" data-act="mv" data-l="timeline" data-i="${i}" data-d="-1" ${i==0?'disabled':''}>↑</button><button class="sm" data-act="mv" data-l="timeline" data-i="${i}" data-d="1" ${i==D.timeline.length-1?'disabled':''}>↓</button><button class="sm dan" data-act="rm" data-l="timeline" data-i="${i}">Excluir</button></div>
       </div>
-      <div class="grid2">
-        <div><label>Ano / marco</label><input value="${esc(t.ano)}" data-y="${i}" data-k="ano"></div>
-        <div><label>Título</label><input value="${esc(t.titulo)}" data-y="${i}" data-k="titulo"></div>
-      </div>
-      <label>Texto</label><textarea data-y="${i}" data-k="texto">${esc(t.texto)}</textarea>
-      <label>Fotos (${t.fotos.length})</label>
+      <div class="grid2">${F('timeline.'+i+'.ano','Ano / marco')}${F('timeline.'+i+'.titulo','Título')}</div>
+      ${F('timeline.'+i+'.texto','Texto','area')}
       ${photosHTML('timeline.'+i+'.fotos')}
-    </div>`).join('')||'<div class="empty">Nenhum ano. Clique em + Ano.</div>';
+    </div>`).join('')||'<div class="empty">Nenhum ano</div>';
+  const P=D.site.programacao;
+  $('prog').innerHTML=P.map((c,i)=>`
+    <div class="item">
+      <div class="toprow"><span class="yr" style="font-size:22px">${esc((c.titulo||'Novo card').replace(/\n/g,' '))}</span>
+        <div style="display:flex;gap:6px"><button class="sm" data-act="mv" data-l="site.programacao" data-i="${i}" data-d="-1" ${i==0?'disabled':''}>↑</button><button class="sm" data-act="mv" data-l="site.programacao" data-i="${i}" data-d="1" ${i==P.length-1?'disabled':''}>↓</button><button class="sm dan" data-act="rm" data-l="site.programacao" data-i="${i}">Excluir</button></div>
+      </div>
+      <div class="grid2">${F('site.programacao.'+i+'.tipo','Tipo (ex.: Exposição)')}
+        <div><label>Cor da etiqueta</label><select data-f="site.programacao.${i}.cor">${['amarelo','rosa','verde'].map(o=>`<option ${c.cor===o?'selected':''}>${o}</option>`).join('')}</select></div></div>
+      ${F('site.programacao.'+i+'.titulo','Título','area','Quebre a linha com Enter.')}${F('site.programacao.'+i+'.texto','Texto','area')}
+      <div class="grid2">${F('site.programacao.'+i+'.botao','Texto do botão')}${F('site.programacao.'+i+'.link','Link do botão','input','#visite ou um link https://')}</div>
+    </div>`).join('')||'<div class="empty">Nenhum card</div>';
+  $('f-visita').innerHTML=F('site.visita.endereco','Endereço','area','O mapa atualiza sozinho pelo endereço.')+
+    `<div class="grid2">${F('site.visita.funcionamento','Funcionamento')}${F('site.visita.visitas','Visitas')}</div>`+
+    F('site.visita.grupos','Grupos e escolas')+F('site.visita.nota','Aviso abaixo','area')+
+    `<h3>Bloco de apoio</h3>`+F('site.apoio.titulo','Título','area')+F('site.apoio.texto','Texto','area');
+  $('f-redes').innerHTML=`<div class="grid2">${F('site.redes.instagram','Instagram')}${F('site.redes.youtube','YouTube (link)')}${F('site.redes.facebook','Facebook (link)')}${F('site.redes.whatsapp','WhatsApp (número)')}</div>`;
 }
 
 document.addEventListener('input',e=>{
   const el=e.target;if(!D)return;
-  if(el.dataset.p){getArr(el.dataset.p)[+el.dataset.i][el.dataset.k]=el.value;dirty(true)}
-  else if(el.dataset.y!==undefined){D.timeline[+el.dataset.y][el.dataset.k]=el.value;dirty(true);
-    if(el.dataset.k==='ano')el.closest('.item').querySelector('.yr').textContent=el.value||'Novo'}
+  if(el.dataset.f){setP(el.dataset.f,el.value);dirty(true)}
+  else if(el.dataset.p){getP(el.dataset.p)[+el.dataset.i][el.dataset.k]=el.value;dirty(true)}
 });
 document.addEventListener('change',e=>{if(e.target.dataset.k==='src')render()});
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b||!D)return;
   const a=b.dataset.act,i=+b.dataset.i;
-  if(b.dataset.p){
-    const arr=getArr(b.dataset.p);
-    if(a==='up'){[arr[i-1],arr[i]]=[arr[i],arr[i-1]]}
-    else if(a==='down'){[arr[i+1],arr[i]]=[arr[i],arr[i+1]]}
-    else if(a==='del'){if(!confirm('Remover esta foto do site?'))return;arr.splice(i,1)}
-    else if(a==='link'){const u=prompt('Cole o link da imagem (termina em .jpg, .png, .webp…):');if(!u)return;const c=prompt('Legenda e crédito da foto:')||'';arr.push({src:u.trim(),cap:c.trim()})}
-    else if(a==='upload'){uploadTarget=b.dataset.p;$('file').value='';$('file').click();return}
-    dirty(true);render();return;
-  }
-  if(a==='yup'){[D.timeline[i-1],D.timeline[i]]=[D.timeline[i],D.timeline[i-1]]}
-  else if(a==='ydown'){[D.timeline[i+1],D.timeline[i]]=[D.timeline[i],D.timeline[i+1]]}
-  else if(a==='ydel'){if(!confirm('Excluir este ano e as fotos dele da linha do tempo?'))return;D.timeline.splice(i,1)}
+  if(a==='mv'||a==='rm'){const L=getP(b.dataset.l);
+    if(a==='mv'){const j=i+(+b.dataset.d);[L[i],L[j]]=[L[j],L[i]]}else{if(!confirm('Excluir este item?'))return;L.splice(i,1)}
+    dirty(true);render();return}
+  if(!b.dataset.p)return;
+  const arr=getP(b.dataset.p);
+  if(a==='up'){[arr[i-1],arr[i]]=[arr[i],arr[i-1]]}
+  else if(a==='down'){[arr[i+1],arr[i]]=[arr[i],arr[i+1]]}
+  else if(a==='del'){if(!confirm('Remover esta foto?'))return;arr.splice(i,1)}
+  else if(a==='link'){const u=prompt('Cole o link da imagem:');if(!u)return;arr.push({src:u.trim(),cap:(prompt('Legenda e crédito:')||'').trim()})}
+  else if(a==='upload'){uploadTarget=b.dataset.p;$('file').value='';$('file').click();return}
   dirty(true);render();
 });
-$('addYear').onclick=()=>{D.timeline.push({ano:'',titulo:'',texto:'',fotos:[]});dirty(true);render();
-  const items=document.querySelectorAll('#tl .item');items[items.length-1].scrollIntoView({behavior:'smooth',block:'center'});items[items.length-1].querySelector('input').focus()};
+$('addYear').onclick=()=>{D.timeline.push({ano:'',titulo:'',texto:'',fotos:[]});dirty(true);render();const it=[...document.querySelectorAll('#tl .item')].pop();it.scrollIntoView({behavior:'smooth',block:'center'});it.querySelector('input').focus()};
+$('addProg').onclick=()=>{D.site.programacao.push({tipo:'Evento',cor:'amarelo',titulo:'',texto:'',botao:'Saiba mais →',link:'#visite'});dirty(true);render();const it=[...document.querySelectorAll('#prog .item')].pop();it.scrollIntoView({behavior:'smooth',block:'center'})};
 
+/* ---------- upload ---------- */
 function resize(file,max=1600,q=.82){
-  return new Promise((res,rej)=>{
-    const img=new Image(),u=URL.createObjectURL(file);
-    img.onload=()=>{let{width:w,height:h}=img;const s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);
+  return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(file);
+    img.onload=()=>{let w=img.width,h=img.height;const s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);
       const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
       c.toBlob(b=>{URL.revokeObjectURL(u);b?res(b):rej(new Error('conversão falhou'))},'image/jpeg',q)};
-    img.onerror=()=>rej(new Error('formato não suportado (use JPG ou PNG)'));img.src=u;
-  });
+    img.onerror=()=>rej(new Error('formato não suportado (use JPG ou PNG)'));img.src=u})
 }
 const blob64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result.split(',')[1]);f.readAsDataURL(b)});
 $('file').onchange=async()=>{
   const files=[...$('file').files];if(!files.length||!uploadTarget)return;
-  const arr=getArr(uploadTarget);let n=0;
-  for(const f of files){
-    n++;$('prog').textContent=`Enviando foto ${n}/${files.length}…`;
-    try{
-      const blob=await resize(f);
+  const arr=getP(uploadTarget);let n=0;
+  for(const f of files){n++;$('prog2').textContent=`Enviando foto ${n}/${files.length}…`;
+    try{const blob=await resize(f);
       const name=`fotos/${new Date().toISOString().replace(/\D/g,'').slice(0,14)}-${Math.random().toString(36).slice(2,6)}.jpg`;
-      const r=await api(name,{method:'PUT',body:JSON.stringify({message:'Nova foto pelo painel',content:await blob64(blob),branch:cfg().b})});
+      const r=await api(name,{method:'PUT',body:JSON.stringify({message:'Nova foto pelo painel',content:await blob64(blob),branch:C.b})});
       if(!r.ok)throw new Error('GitHub respondeu '+r.status);
-      PREVIEW[name]=URL.createObjectURL(blob);
-      arr.push({src:name,cap:''});dirty(true);render();
-    }catch(e){alert('Não deu para enviar '+f.name+': '+e.message)}
-  }
-  $('prog').textContent=n?'Foto(s) enviada(s). Escreva a legenda e clique em Publicar.':'';
+      PREVIEW[name]=URL.createObjectURL(blob);arr.push({src:name,cap:''});dirty(true);render();
+    }catch(e){alert('Não deu para enviar '+f.name+': '+e.message)}}
+  $('prog2').textContent='Foto enviada. Escreva a legenda e clique em Publicar.';
 };
 
+/* ---------- publicar ---------- */
 $('pub').onclick=async()=>{
-  $('pub').disabled=true;$('prog').textContent='Publicando…';
+  $('pub').disabled=true;$('prog2').textContent='Publicando…';
   try{
     const clean=JSON.parse(JSON.stringify(D));
-    const all=[clean.fachada,...Object.values(clean.espacos),...clean.timeline.map(t=>t.fotos)];
-    all.forEach(a=>{for(let i=a.length-1;i>=0;i--)if(!a[i].src||!a[i].src.trim())a.splice(i,1)});
-    const body={message:'Atualizar fotos pelo painel',content:b64e(JSON.stringify(clean,null,2)),branch:cfg().b};if(SHA)body.sha=SHA;
+    [clean.fachada,...Object.values(clean.espacos),...clean.timeline.map(t=>t.fotos)].forEach(a=>{for(let i=a.length-1;i>=0;i--)if(!(a[i].src||'').trim())a.splice(i,1)});
+    const body={message:'Atualizar site pelo painel ADM',content:b64e(JSON.stringify(clean,null,2)),branch:C.b};if(SHA)body.sha=SHA;
     let r=await api('dados.json',{method:'PUT',body:JSON.stringify(body)});
     if(r.status===409||r.status===422){const g=await api('dados.json');if(g.ok){body.sha=(await g.json()).sha;r=await api('dados.json',{method:'PUT',body:JSON.stringify(body)})}}
     if(!r.ok)throw new Error('GitHub respondeu '+r.status);
-    SHA=(await r.json()).content.sha;dirty(false);
-    $('prog').textContent='Publicado ✓ O site atualiza em 1–2 minutos.';
-  }catch(e){$('prog').textContent='';alert('Erro ao publicar: '+e.message);$('pub').disabled=false}
+    SHA=(await r.json()).content.sha;dirty(false);$('prog2').textContent='Publicado ✓ O site público atualiza em 1–2 minutos.';
+  }catch(e){$('prog2').textContent='';alert('Erro ao publicar: '+e.message);$('pub').disabled=false}
 };
 $('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,2)],{type:'application/json'}));a.download='dados.json';a.click()};
-addEventListener('beforeunload',e=>{if(!$('pub').disabled){e.preventDefault();e.returnValue=''}});
+addEventListener('beforeunload',e=>{if(D&&!$('pub').disabled){e.preventDefault();e.returnValue=''}});
+
+LS.del('mh_token');
+show(LS.get('mh_vault')?'vLogin':'vSetup');
 </script>
 </body>
 </html>
