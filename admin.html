@@ -77,7 +77,7 @@ section{scroll-margin-top:64px}
     <h1 style="font-size:40px">Acesso <b>ADM</b></h1>
     <p class="sub">Museu da Cultura Hip Hop RS</p>
     <label>PIN</label>
-    <input id="pinIn" class="pin mask" type="text" inputmode="numeric" maxlength="12" autocomplete="off" autocorrect="off" spellcheck="false" name="x-pin-a" data-lpignore="true" data-1p-ignore>
+    <input id="pinIn" class="pin mask" type="text" inputmode="numeric" maxlength="8" autocomplete="off" autocorrect="off" spellcheck="false" name="x-pin-a" data-lpignore="true" data-1p-ignore readonly>
     <button type="button" class="sm eye" data-eye="pinIn">👁 Mostrar PIN</button>
     <div class="row"><button class="pri" id="enter" style="flex:1">Entrar</button></div>
     <div class="status" id="stLogin"></div>
@@ -95,7 +95,7 @@ section{scroll-margin-top:64px}
       <div><label>Repositório</label><input id="repo" value="museu_hiphop"></div>
     </div>
     <label>Branch</label><input id="branch" value="main">
-    <label>Token do GitHub</label><input id="token" class="mask" type="text" placeholder="github_pat_..." autocomplete="off" autocorrect="off" spellcheck="false" name="x-tk" data-lpignore="true" data-1p-ignore>
+    <label>Token do GitHub</label><input id="token" class="mask" type="text" placeholder="ghp_... ou github_pat_..." autocomplete="off" autocorrect="off" spellcheck="false" name="x-tk" data-lpignore="true" data-1p-ignore readonly>
     <details>
       <summary>Como criar o token</summary>
       <ol>
@@ -106,8 +106,10 @@ section{scroll-margin-top:64px}
       </ol>
     </details>
     <label>Crie um PIN (mín. 4 números)</label>
-    <input id="pinNew" class="pin mask" type="text" inputmode="numeric" maxlength="12" autocomplete="off" autocorrect="off" spellcheck="false" name="x-pin-b" data-lpignore="true" data-1p-ignore>
-    <button type="button" class="sm eye" data-eye="pinNew">👁 Mostrar PIN</button>
+    <input id="pinNew" class="pin" type="text" inputmode="numeric" maxlength="8" autocomplete="off" autocorrect="off" spellcheck="false" name="x-pin-b" data-lpignore="true" data-1p-ignore readonly>
+    <label>Repita o PIN</label>
+    <input id="pinNew2" class="pin" type="text" inputmode="numeric" maxlength="8" autocomplete="off" autocorrect="off" spellcheck="false" name="x-pin-c" data-lpignore="true" data-1p-ignore readonly>
+    <div class="hint">O PIN aparece enquanto você cria, para conferir. Anote.</div>
     <div class="row"><button class="pri" id="save" style="flex:1">Salvar e entrar</button></div>
     <div class="status" id="stSetup">O token fica guardado criptografado neste aparelho, protegido pelo PIN.</div>
   </div>
@@ -155,6 +157,7 @@ const $=id=>document.getElementById(id);
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LS={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
 let C=null,D=null,SHA=null,PREVIEW={},uploadTarget=null;
+const VKEY='museuHipHop_admVault_v2';
 const show=v=>['vLogin','vSetup','vEditor'].forEach(x=>$(x).hidden=x!==v);
 
 /* ---------- crypto: token protegido por PIN ---------- */
@@ -169,21 +172,21 @@ async function unseal(str,pin){const o=JSON.parse(str);const pt=await crypto.sub
 /* ---------- login ---------- */
 function stt(id,msg,cls=''){const s=$(id);s.textContent=msg;s.className='status '+cls}
 $('save').onclick=async()=>{
-  const c={o:$('owner').value.trim(),r:$('repo').value.trim(),b:$('branch').value.trim()||'main',t:$('token').value.trim()},pin=$('pinNew').value.replace(/\D/g,'');
-  if(!c.t)return stt('stSetup','Cole o token.','err');if(pin.length<4)return stt('stSetup','O PIN precisa ter pelo menos 4 dígitos.','err');
+  const c={o:$('owner').value.trim(),r:$('repo').value.trim(),b:$('branch').value.trim()||'main',t:$('token').value.trim()},pin=$('pinNew').value.replace(/\D/g,''),pin2=$('pinNew2').value.replace(/\D/g,'');
+  if(!c.t)return stt('stSetup','Cole o token.','err');if(pin.length<4)return stt('stSetup','O PIN precisa ter pelo menos 4 números.','err');if(pin!==pin2)return stt('stSetup','Os dois PINs não são iguais. Digite de novo.','err');
   stt('stSetup','Testando acesso…');C=c;
   if(!(await connect('stSetup')))return;
-  LS.set('mh_vault',await seal(c,pin));LS.del('mh_token');
+  LS.set(VKEY,await seal(c,pin));LS.del('mh_token');
 };
 $('enter').onclick=async()=>{
   const pin=$('pinIn').value.replace(/\D/g,'');if(!pin)return;
   stt('stLogin','Entrando…');
-  try{C=await unseal(LS.get('mh_vault'),pin)}catch(e){$('pinIn').value='';$('reset').className='pri';return stt('stLogin','PIN incorreto. Se não lembrar, use o botão abaixo para entrar com o token e criar um PIN novo.','err')}
+  try{C=await unseal(LS.get(VKEY),pin)}catch(e){$('pinIn').value='';$('reset').className='pri';return stt('stLogin','PIN incorreto. Se não lembrar, use o botão abaixo para entrar com o token e criar um PIN novo.','err')}
   await connect('stLogin');
 };
 $('pinIn').onkeydown=e=>{if(e.key==='Enter')$('enter').click()};
-$('reset').onclick=()=>{LS.del('mh_vault');$('pinNew').value='';show('vSetup');stt('stSetup','Cole o token do GitHub e crie um PIN novo (só números).')};
-['pinIn','pinNew'].forEach(id=>$(id).addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'')}));
+$('reset').onclick=()=>{LS.del(VKEY);$('pinNew').value='';$('pinNew2').value='';show('vSetup');stt('stSetup','Cole o token do GitHub e crie um PIN novo (só números).')};
+['pinIn','pinNew','pinNew2'].forEach(id=>$(id).addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'')}));
 document.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=$(b.dataset.eye);i.classList.toggle('show');b.textContent=i.classList.contains('show')?'🙈 Esconder PIN':'👁 Mostrar PIN'});
 $('logout').onclick=()=>{if(!$('pub').disabled&&!confirm('Há alterações não publicadas. Sair mesmo assim?'))return;C=null;D=null;$('pinIn').value='';show('vLogin')};
 
@@ -331,8 +334,14 @@ $('pub').onclick=async()=>{
 $('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(D,null,2)],{type:'application/json'}));a.download='dados.json';a.click()};
 addEventListener('beforeunload',e=>{if(D&&!$('pub').disabled){e.preventDefault();e.returnValue=''}});
 
-LS.del('mh_token');
-show(LS.get('mh_vault')?'vLogin':'vSetup');
+LS.del('mh_token');LS.del('mh_vault');
+['pinIn','pinNew','pinNew2','token'].forEach(id=>{const i=$(id);
+  const unlock=()=>{if(i.hasAttribute('readonly')){i.removeAttribute('readonly');if(!i.dataset.typed)i.value=''}};
+  i.addEventListener('focus',unlock);i.addEventListener('touchstart',unlock,{passive:true});i.addEventListener('mousedown',unlock);
+  i.addEventListener('keydown',()=>i.dataset.typed=1);i.addEventListener('paste',()=>i.dataset.typed=1);
+});
+setTimeout(()=>['pinIn','pinNew','pinNew2'].forEach(id=>{if(!$(id).dataset.typed)$(id).value=''}),400);
+show(LS.get(VKEY)?'vLogin':'vSetup');
 </script>
 </body>
 </html>
