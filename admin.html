@@ -57,6 +57,9 @@ code{background:var(--bg3);padding:1px 6px;border-radius:6px;font-size:13px}
 .login{min-height:100svh;display:grid;place-items:center;padding:16px}
 .login .card{width:100%;max-width:420px}
 .pin{font-size:28px;letter-spacing:10px;text-align:center}
+.mask{-webkit-text-security:disc;text-security:disc}
+.mask.show{-webkit-text-security:none;text-security:none}
+.eye{margin-top:8px}
 .tabs{position:sticky;top:0;z-index:5;background:rgba(11,11,11,.92);backdrop-filter:blur(10px);display:flex;gap:6px;overflow-x:auto;padding:10px 0;margin-top:10px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tabs a{flex:0 0 auto;font-size:13px;font-weight:700;padding:8px 14px;border-radius:999px;background:var(--bg3);color:var(--ink);text-decoration:none}
@@ -74,10 +77,11 @@ section{scroll-margin-top:64px}
     <h1 style="font-size:40px">Acesso <b>ADM</b></h1>
     <p class="sub">Museu da Cultura Hip Hop RS</p>
     <label>PIN</label>
-    <input id="pinIn" class="pin" type="password" inputmode="numeric" maxlength="12" autocomplete="current-password">
+    <input id="pinIn" class="pin mask" type="text" inputmode="numeric" maxlength="12" autocomplete="off" autocorrect="off" spellcheck="false" name="x-pin-a" data-lpignore="true" data-1p-ignore>
+    <button type="button" class="sm eye" data-eye="pinIn">👁 Mostrar PIN</button>
     <div class="row"><button class="pri" id="enter" style="flex:1">Entrar</button></div>
     <div class="status" id="stLogin"></div>
-    <div class="row"><button class="sm dan" id="reset">Trocar conta / esqueci o PIN</button></div>
+    <div class="row"><button class="sm" id="reset">Esqueci o PIN: entrar com o token</button></div>
   </div>
 </div>
 
@@ -91,7 +95,7 @@ section{scroll-margin-top:64px}
       <div><label>Repositório</label><input id="repo" value="museu_hiphop"></div>
     </div>
     <label>Branch</label><input id="branch" value="main">
-    <label>Token do GitHub</label><input id="token" type="password" placeholder="github_pat_..." autocomplete="off">
+    <label>Token do GitHub</label><input id="token" class="mask" type="text" placeholder="github_pat_..." autocomplete="off" autocorrect="off" spellcheck="false" name="x-tk" data-lpignore="true" data-1p-ignore>
     <details>
       <summary>Como criar o token</summary>
       <ol>
@@ -101,8 +105,9 @@ section{scroll-margin-top:64px}
         <li>Gere, copie e cole aqui.</li>
       </ol>
     </details>
-    <label>Crie um PIN (mín. 4 dígitos)</label>
-    <input id="pinNew" class="pin" type="password" inputmode="numeric" maxlength="12" autocomplete="new-password">
+    <label>Crie um PIN (mín. 4 números)</label>
+    <input id="pinNew" class="pin mask" type="text" inputmode="numeric" maxlength="12" autocomplete="off" autocorrect="off" spellcheck="false" name="x-pin-b" data-lpignore="true" data-1p-ignore>
+    <button type="button" class="sm eye" data-eye="pinNew">👁 Mostrar PIN</button>
     <div class="row"><button class="pri" id="save" style="flex:1">Salvar e entrar</button></div>
     <div class="status" id="stSetup">O token fica guardado criptografado neste aparelho, protegido pelo PIN.</div>
   </div>
@@ -164,20 +169,22 @@ async function unseal(str,pin){const o=JSON.parse(str);const pt=await crypto.sub
 /* ---------- login ---------- */
 function stt(id,msg,cls=''){const s=$(id);s.textContent=msg;s.className='status '+cls}
 $('save').onclick=async()=>{
-  const c={o:$('owner').value.trim(),r:$('repo').value.trim(),b:$('branch').value.trim()||'main',t:$('token').value.trim()},pin=$('pinNew').value.trim();
+  const c={o:$('owner').value.trim(),r:$('repo').value.trim(),b:$('branch').value.trim()||'main',t:$('token').value.trim()},pin=$('pinNew').value.replace(/\D/g,'');
   if(!c.t)return stt('stSetup','Cole o token.','err');if(pin.length<4)return stt('stSetup','O PIN precisa ter pelo menos 4 dígitos.','err');
   stt('stSetup','Testando acesso…');C=c;
   if(!(await connect('stSetup')))return;
   LS.set('mh_vault',await seal(c,pin));LS.del('mh_token');
 };
 $('enter').onclick=async()=>{
-  const pin=$('pinIn').value.trim();if(!pin)return;
+  const pin=$('pinIn').value.replace(/\D/g,'');if(!pin)return;
   stt('stLogin','Entrando…');
-  try{C=await unseal(LS.get('mh_vault'),pin)}catch(e){$('pinIn').value='';return stt('stLogin','PIN incorreto.','err')}
+  try{C=await unseal(LS.get('mh_vault'),pin)}catch(e){$('pinIn').value='';$('reset').className='pri';return stt('stLogin','PIN incorreto. Se não lembrar, use o botão abaixo para entrar com o token e criar um PIN novo.','err')}
   await connect('stLogin');
 };
 $('pinIn').onkeydown=e=>{if(e.key==='Enter')$('enter').click()};
-$('reset').onclick=()=>{if(confirm('Apagar o acesso salvo neste aparelho? Você vai precisar do token de novo.')){LS.del('mh_vault');show('vSetup')}};
+$('reset').onclick=()=>{LS.del('mh_vault');$('pinNew').value='';show('vSetup');stt('stSetup','Cole o token do GitHub e crie um PIN novo (só números).')};
+['pinIn','pinNew'].forEach(id=>$(id).addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'')}));
+document.querySelectorAll('[data-eye]').forEach(b=>b.onclick=()=>{const i=$(b.dataset.eye);i.classList.toggle('show');b.textContent=i.classList.contains('show')?'🙈 Esconder PIN':'👁 Mostrar PIN'});
 $('logout').onclick=()=>{if(!$('pub').disabled&&!confirm('Há alterações não publicadas. Sair mesmo assim?'))return;C=null;D=null;$('pinIn').value='';show('vLogin')};
 
 /* ---------- GitHub ---------- */
